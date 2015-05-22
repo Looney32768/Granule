@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Class-Path: granule-closure-compiler.r1055.jdk15.jar granule1.0.9.jar 
+ log4j-1.2.16.jar commons-logging-1.1.1.jar servlet-api.jar ant.jar js
+ p-api.jar slf4j-api-1.6.1.jar junit.jar granule-closure-compiler.r105
+ 5.jdk15.jar
+Main-Class: com.granule.ant.BuildCache
+

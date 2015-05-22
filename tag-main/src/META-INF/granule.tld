@@ -33,6 +33,16 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>enabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>customVersion</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
 </taglib>

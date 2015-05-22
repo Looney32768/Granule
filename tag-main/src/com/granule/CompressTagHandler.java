@@ -48,18 +48,25 @@ public class CompressTagHandler {
     private String method = null;
     private String options = null;
     private String basepath = null;
+    private String customVersion;
+    private boolean enabled;
     
     private static final String JS_DUPLICATES = "granule_js_duplicates";
     private static final String CSS_DUPLICATES = "granule_css_duplicates";
   
-    public CompressTagHandler(String id, String method, String options, String basepath) {
+    public CompressTagHandler(String id, String method, String options, String basepath, boolean enabled, String customVersion) {
         this.id = id;
         this.method = method;
         this.options = options;
         this.basepath = basepath;
+        this.enabled = enabled;
+        this.customVersion = customVersion;
     }
 
     public String handleTag(IRequestProxy requestProxy, IRequestProxy runtimRequest, String oldBody) throws JSCompileException {
+        if (!enabled) {
+            return oldBody;
+        }
         String newBody = oldBody;
         try {
             CompressorSettings settings = TagCacheFactory.getCompressorSettings(requestProxy.getRealPath("/"));
@@ -153,8 +160,8 @@ public class CompressTagHandler {
 	                            correction -= e.getEnd() - e.getBegin();
 	                        } else {
 	                            if (fragmentDescriptors.size() > 0) {
-	                                String newText = "<script src=\"" + PathUtils.getContextURL(runtimRequest.getContextPath(),"/combined.js?id="
-	                                        + bundleId) + "\"></script>";
+	                                String newText = "<script src=\"" + PathUtils.getContextURL(runtimRequest.getContextPath(),"/combinedjs/"
+	                                        + bundleId + '_' + (customVersion != null ? customVersion : "") ) + ".js\"></script>";
 	                                newBody = newBody.substring(0, e.getBegin() + correction) + newText
 	                                        + newBody.substring(e.getEnd() + correction);
 	                                correction -= e.getEnd() - e.getBegin();
@@ -349,9 +356,10 @@ public class CompressTagHandler {
 								.getBegin()));
 						sb.append("href=\"");
 						sb.append(PathUtils.getContextURL(runtimeRequest
-								.getContextPath(), "/combined.css?id="));
+								.getContextPath(), "/combinedcss/"));
 						sb.append(ld.scriptId);
-						sb.append("\" ");
+                        sb.append('_').append(customVersion);
+						sb.append(".css\" ");
 						sb.append(chunk.substring(a.getEnd(), links.get(p)
 								.getEnd()));
 					}

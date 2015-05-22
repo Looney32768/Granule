@@ -114,13 +114,15 @@ public class JspProcessor {
                     String method = attrs.getValue("method");
                     String options = attrs.getValue("options");
                     String basepath = attrs.getValue("basepath");
+                    String enabled = attrs.getValue("enabled");
+                    String customVersion = attrs.getValue("customVersion");
                     if (body == null) body = "";
                     if (body.contains("<%--"))
                         body = removeJspComments(body);
                     if (body.contains("<%")) {
                         logger.warn("Dynamic content found, tag skipped in file " + filename);
                     } else {
-                        CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath);
+                        CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion);
                         tagHandler.handleTag(request, null, body);
                     }
                 } catch (JSCompileException e) {

@@ -61,7 +61,9 @@ public class CompressServlet extends HttpServlet {
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException,
             ServletException {
-        String id = request.getParameter(ID_PARAMETER);
+        final String uri = request.getRequestURI();
+        final int idStartPosition = uri.lastIndexOf('/') + 1;
+        String id = uri.substring(idStartPosition, uri.indexOf('_', idStartPosition+1)); //getParameter(ID_PARAMETER);
         (new CompressorHandler()).handle(request, response, id);
     }
 

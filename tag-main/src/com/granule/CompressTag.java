@@ -38,6 +38,25 @@ public class CompressTag extends BodyTagSupport {
     private String id = null;
     private String options = null;
     private String basepath = null;
+
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getCustomVersion() {
+        return customVersion;
+    }
+
+    public void setCustomVersion(String customVersion) {
+        this.customVersion = customVersion;
+    }
+
+    private String enabled = null;
+    private String customVersion = null;
     
     private static final String NOT_PROCESS_PARAMETER = "granule";
 
@@ -61,7 +80,7 @@ public class CompressTag extends BodyTagSupport {
             return SKIP_BODY;
         }
         try {
-            CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath);
+            CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion);
             RealRequestProxy runtimeRequest = new RealRequestProxy(httpRequest);
 			String newBody = compressor.handleTag(runtimeRequest, runtimeRequest, oldBody);
             getPreviousOut().print(newBody);
