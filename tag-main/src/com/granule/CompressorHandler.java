@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.granule.cache.TagCacheFactory;
 import com.granule.utils.HttpHeaders;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * User: Dario Wunsch
@@ -49,6 +50,7 @@ public class CompressorHandler {
             }
 
             response.setHeader("Content-Type", bundle.getMimeType()+"; charset=utf-8");
+            response.setHeader("ETag", DigestUtils.md5Hex(bundle.getBundleValue()));
             HttpHeaders.setCacheExpireDate(response, 6048000);
             
             OutputStream os = response.getOutputStream();
