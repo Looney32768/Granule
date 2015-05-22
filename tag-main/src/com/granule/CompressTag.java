@@ -55,7 +55,7 @@ public class CompressTag extends BodyTagSupport {
         this.customVersion = customVersion;
     }
 
-    private String enabled = null;
+    private String enabled = "true";
     private String customVersion = null;
     
     private static final String NOT_PROCESS_PARAMETER = "granule";

@@ -122,7 +122,7 @@ public class JspProcessor {
                     if (body.contains("<%")) {
                         logger.warn("Dynamic content found, tag skipped in file " + filename);
                     } else {
-                        CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion);
+                        CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath, enabled == null || "true".equals(enabled), customVersion);
                         tagHandler.handleTag(request, null, body);
                     }
                 } catch (JSCompileException e) {
