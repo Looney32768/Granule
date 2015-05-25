@@ -15,13 +15,7 @@
  */
 package com.granule.cache;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -105,6 +99,35 @@ public class FileCache extends TagCacheImpl {
 		}
 		return id;
 	}
+
+    public String compressInline(IRequestProxy request,
+                                 CompressorSettings settings,
+                                 List<FragmentDescriptor> fragmentDescriptors, boolean isJs,
+                                 String options) throws JSCompileException {
+
+        String signature = generateSignature(settings, fragmentDescriptors, options, isJs);
+        if (!signatureToId.containsKey(signature)) {
+            CachedBundle cs = new CachedBundle();
+            cs.setFragments(fragmentDescriptors);
+            cs.setOptions(options);
+            String compiledString;
+            if (isJs) {
+                compiledString = "<script>" + cs.compileScriptWithoutGzip(settings, request) + "</script>";
+            }
+            else {
+                compiledString = "<style>" + cs.compileCssWithoutGzip(settings, request) + "</style>";
+            }
+            synchronized (this) {
+                signatureToId.put(signature, compiledString);
+                return compiledString;
+            }
+        }
+        else {
+            synchronized (this) {
+                return signatureToId.get(signature);
+            }
+        }
+    }
 
 	private void saveBundle(String id, CachedBundle cs) {
 		try {
@@ -249,7 +272,7 @@ public class FileCache extends TagCacheImpl {
 			}
 		} catch (Exception e) {
 			logger.error("Error while deleting files from folder "
-					+ cacheFolder, e);
+                    + cacheFolder, e);
 		}
 		return deleted;
 	}
@@ -317,7 +340,7 @@ public class FileCache extends TagCacheImpl {
 			cacheFolder = rootPath + "/" + cacheFolder;
 		cacheFolder = PathUtils.clean(cacheFolder);
 		logger.info(MessageFormat.format("Granule FileCache location is {0}",
-				cacheFolder));
+                cacheFolder));
 		return cacheFolder;
 	}
 

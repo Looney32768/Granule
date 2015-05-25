@@ -38,25 +38,9 @@ public class CompressTag extends BodyTagSupport {
     private String id = null;
     private String options = null;
     private String basepath = null;
-
-    public String getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(String enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getCustomVersion() {
-        return customVersion;
-    }
-
-    public void setCustomVersion(String customVersion) {
-        this.customVersion = customVersion;
-    }
-
     private String enabled = "true";
     private String customVersion = null;
+    private String inline = "false";
     
     private static final String NOT_PROCESS_PARAMETER = "granule";
 
@@ -80,7 +64,7 @@ public class CompressTag extends BodyTagSupport {
             return SKIP_BODY;
         }
         try {
-            CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion);
+            CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion, "true".equals(inline));
             RealRequestProxy runtimeRequest = new RealRequestProxy(httpRequest);
 			String newBody = compressor.handleTag(runtimeRequest, runtimeRequest, oldBody);
             getPreviousOut().print(newBody);
@@ -155,5 +139,29 @@ public class CompressTag extends BodyTagSupport {
 
     public void setBasepath(String basepath) {
         this.basepath = basepath;
+    }
+
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getCustomVersion() {
+        return customVersion;
+    }
+
+    public void setCustomVersion(String customVersion) {
+        this.customVersion = customVersion;
+    }
+
+    public String getInline() {
+        return inline;
+    }
+
+    public void setInline(String inline) {
+        this.inline = inline;
     }
 }

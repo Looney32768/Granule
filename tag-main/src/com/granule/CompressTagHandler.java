@@ -50,17 +50,19 @@ public class CompressTagHandler {
     private String basepath = null;
     private String customVersion;
     private boolean enabled;
+    private boolean inline;
     
     private static final String JS_DUPLICATES = "granule_js_duplicates";
     private static final String CSS_DUPLICATES = "granule_css_duplicates";
   
-    public CompressTagHandler(String id, String method, String options, String basepath, boolean enabled, String customVersion) {
+    public CompressTagHandler(String id, String method, String options, String basepath, boolean enabled, String customVersion, boolean inline) {
         this.id = id;
         this.method = method;
         this.options = options;
         this.basepath = basepath;
         this.enabled = enabled;
         this.customVersion = customVersion;
+        this.inline = inline;
     }
 
     public String handleTag(IRequestProxy requestProxy, IRequestProxy runtimRequest, String oldBody) throws JSCompileException {
@@ -148,6 +150,10 @@ public class CompressTagHandler {
                     String bundleId = null;
 
                     if (fragmentDescriptors.size() > 0) {
+                        if (inline) {
+                            TagCache tagCache = TagCacheFactory.getInstance();
+                            return tagCache.compressInline(requestProxy, settings, fragmentDescriptors, true, opts);
+                        }
                         TagCache tagCache = TagCacheFactory.getInstance();
                         bundleId = tagCache.compressAndStore(requestProxy, settings, fragmentDescriptors, true, opts);
                     }

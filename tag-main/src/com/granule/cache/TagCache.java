@@ -33,6 +33,8 @@ import com.granule.JSCompileException;
 public interface TagCache {
     public String compressAndStore(IRequestProxy request, CompressorSettings settings, List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options) throws JSCompileException;
 
+    public String compressInline(IRequestProxy request, CompressorSettings settings, List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options) throws JSCompileException;
+
     public CachedBundle getCompiledBundle(IRequestProxy request, CompressorSettings settings, String id) throws JSCompileException;
 
     public void initForStandalone(String rootPath, CompressorSettings settings);

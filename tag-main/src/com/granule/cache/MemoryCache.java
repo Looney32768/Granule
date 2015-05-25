@@ -25,6 +25,7 @@ import com.granule.logging.Logger;
 import com.granule.logging.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -81,6 +82,33 @@ public class MemoryCache extends TagCacheImpl {
             }
         }
         return id;
+    }
+
+    public String compressInline(IRequestProxy request, CompressorSettings settings,
+                                   List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options) throws JSCompileException {
+
+        String signature = generateSignature(settings, fragmentDescriptors, options, isJs);
+        if (!signatureToId.containsKey(signature)) {
+            CachedBundle cs = new CachedBundle();
+            cs.setFragments(fragmentDescriptors);
+            cs.setOptions(options);
+            String compiledString;
+            if (isJs) {
+                compiledString = "<script>" + cs.compileScriptWithoutGzip(settings, request) + "</script>";
+            }
+            else {
+                compiledString = "<style>" + cs.compileCssWithoutGzip(settings, request) + "</style>";
+            }
+            synchronized (this) {
+                signatureToId.put(signature, compiledString);
+                return compiledString;
+            }
+        }
+        else {
+            synchronized (this) {
+                return signatureToId.get(signature);
+            }
+        }
     }
 
     public CachedBundle getCompiledBundle(IRequestProxy request, CompressorSettings settings, String id)

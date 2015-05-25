@@ -89,6 +89,16 @@ public class CachedBundle {
     }
 
     public void compileScript(CompressorSettings settings, IRequestProxy request) throws JSCompileException {
+        try {
+            bundleValue = gzip(compileScriptWithoutGzip(settings, request));
+        } catch (IOException e) {
+            throw new JSCompileException(e);
+        }
+
+        this.modifyDate=calcModifyDate(request);
+    }
+
+    public String compileScriptWithoutGzip(CompressorSettings settings, IRequestProxy request) throws JSCompileException {
         logger.debug("Start compile javascript");
         mimeType = JAVASCRIPT_MIME;
         CalcDeps cd = new CalcDeps();
@@ -114,13 +124,7 @@ public class CachedBundle {
         for (FragmentDescriptor dep : list)
             if (dep instanceof ExternalFragment && !hash.contains("/" + ((ExternalFragment) dep).getFilePath()))
                 dependentFragments.add(dep);
-        try {
-            bundleValue = gzip(text);
-        } catch (IOException e) {
-            throw new JSCompileException(e);
-        }
-
-        this.modifyDate=calcModifyDate(request);
+        return text;
     }
 
     public void compile(CompressorSettings settings, IRequestProxy request) throws JSCompileException {
@@ -131,6 +135,16 @@ public class CachedBundle {
     }
 
     public void compileCss(CompressorSettings settings, IRequestProxy request) throws JSCompileException {
+        try {
+            bundleValue = gzip(compileCssWithoutGzip(settings, request));
+        } catch (IOException e) {
+            throw new JSCompileException(e);
+        }
+
+        this.modifyDate=calcModifyDate(request);
+    }
+
+    public String compileCssWithoutGzip(CompressorSettings settings, IRequestProxy request) throws JSCompileException {
         logger.debug("Start compile css");
         mimeType = CSS_MIME;
         String text = "";
@@ -139,13 +153,7 @@ public class CachedBundle {
         else
             text = Compressor.unifyCss(fragments, dependentFragments, settings, request);
 
-        try {
-            bundleValue = gzip(text);
-        } catch (IOException e) {
-            throw new JSCompileException(e);
-        }
-
-        this.modifyDate=calcModifyDate(request);
+        return text;
     }
 
     private static byte[] gzip(String text) throws IOException {
