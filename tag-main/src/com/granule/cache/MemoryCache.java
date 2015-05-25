@@ -94,7 +94,7 @@ public class MemoryCache extends TagCacheImpl {
             cs.setOptions(options);
             String compiledString;
             if (isJs) {
-                compiledString = "<script>" + cs.compileScriptWithoutGzip(settings, request) + "</script>";
+                compiledString = "<script type=\"text/javascript\">" + cs.compileScriptWithoutGzip(settings, request) + "</script>";
             }
             else {
                 compiledString = "<style>" + cs.compileCssWithoutGzip(settings, request) + "</style>";
