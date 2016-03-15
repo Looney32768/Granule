@@ -85,10 +85,10 @@ public class MemoryCache extends TagCacheImpl {
     }
 
     public String compressInline(IRequestProxy request, CompressorSettings settings,
-                                   List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options) throws JSCompileException {
+                                   List<FragmentDescriptor> fragmentDescriptors, boolean isJs, String options, boolean cachingAllowed) throws JSCompileException {
 
         String signature = generateSignature(settings, fragmentDescriptors, options, isJs);
-        if (!signatureToId.containsKey(signature)) {
+        if (!cachingAllowed || !signatureToId.containsKey(signature)) {
             CachedBundle cs = new CachedBundle();
             cs.setFragments(fragmentDescriptors);
             cs.setOptions(options);
@@ -99,10 +99,12 @@ public class MemoryCache extends TagCacheImpl {
             else {
                 compiledString = "<style>" + cs.compileCssWithoutGzip(settings, request) + "</style>";
             }
-            synchronized (this) {
-                signatureToId.put(signature, compiledString);
-                return compiledString;
+            if (cachingAllowed) {
+                synchronized (this) {
+                    signatureToId.put(signature, compiledString);
+                }
             }
+            return compiledString;
         }
         else {
             synchronized (this) {

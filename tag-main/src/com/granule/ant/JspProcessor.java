@@ -117,6 +117,7 @@ public class JspProcessor {
                     String enabled = attrs.getValue("enabled");
                     String customVersion = attrs.getValue("customVersion");
                     String inline = attrs.getValue("inline");
+                    String doNotCache = attrs.getValue("doNotCache");
                     if (body == null) body = "";
                     if (body.contains("<%--"))
                         body = removeJspComments(body);
@@ -126,7 +127,8 @@ public class JspProcessor {
                         CompressTagHandler tagHandler = new CompressTagHandler(id, method, options, basepath,
                                 enabled == null || "true".equals(enabled),
                                 customVersion,
-                                inline != null && inline.equals("true"));
+                                inline != null && inline.equals("true"),
+                                doNotCache != null && doNotCache.equals("true"));
                         tagHandler.handleTag(request, null, body);
                     }
                 } catch (JSCompileException e) {

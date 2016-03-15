@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jsp-demo/jsp-demo.iml" filepath="$PROJECT_DIR$/jsp-demo/jsp-demo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tag-main/tag-main.iml" filepath="$PROJECT_DIR$/tag-main/tag-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Granule.iml" filepath="$PROJECT_DIR$/.idea/Granule.iml" />
     </modules>
   </component>
 </project>
-

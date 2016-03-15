@@ -41,6 +41,7 @@ public class CompressTag extends BodyTagSupport {
     private String enabled = "true";
     private String customVersion = null;
     private String inline = "false";
+    private String doNotCache = "false";
     
     private static final String NOT_PROCESS_PARAMETER = "granule";
 
@@ -64,7 +65,7 @@ public class CompressTag extends BodyTagSupport {
             return SKIP_BODY;
         }
         try {
-            CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion, "true".equals(inline));
+            CompressTagHandler compressor = new CompressTagHandler(id, method, options, basepath, "true".equals(enabled), customVersion, "true".equals(inline), "true".equals(doNotCache));
             RealRequestProxy runtimeRequest = new RealRequestProxy(httpRequest);
 			String newBody = compressor.handleTag(runtimeRequest, runtimeRequest, oldBody);
             getPreviousOut().print(newBody);
@@ -163,5 +164,13 @@ public class CompressTag extends BodyTagSupport {
 
     public void setInline(String inline) {
         this.inline = inline;
+    }
+
+    public String getDoNotCache() {
+        return doNotCache;
+    }
+
+    public void setDoNotCache(String doNotCache) {
+        this.doNotCache = doNotCache;
     }
 }
